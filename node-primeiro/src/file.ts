@@ -1,14 +1,9 @@
-import { writeFile } from "fs/promises";
+import { readFile, writeFile } from "fs/promises";
 
 const exec = async () => {
-  console.log("Iniciando...");
-
-  const list = ["Flávio", "Maria", "Luciana"];
-  const listTxt = list.join("\n");
-
-  await writeFile("./teste.txt", listTxt);
-
-  console.log("Arquivo criado com sucesso");
+  const fileContent = await readFile("./teste.txt", "utf-8");
+  const list = fileContent.split("\n");
+  console.log(list);
 };
 
 exec();
