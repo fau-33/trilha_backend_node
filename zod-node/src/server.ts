@@ -1,5 +1,6 @@
 import express from "express";
 import { z } from "zod";
+import { jsonPlaceHolderResponse } from "./schemas/jsonPlaceHolderResponse";
 
 const server = express();
 
@@ -8,6 +9,18 @@ server.use(express.urlencoded({ extended: true }));
 
 server.get("/ping", (req, res) => {
   res.json({ pong: true });
+});
+
+server.get("/posts", async (req, res) => {
+  const request = await fetch("https://jsonplaceholder.typicode.com/posts");
+  const data = await request.json();
+
+  const result = jsonPlaceHolderResponse.safeParse(data);
+  if (!result.success) {
+    return res.status(400).json({ error: "Ocorreu erro interno!" });
+  }
+  let totalPosts = result.data.length;
+  res.json({ total: totalPosts });
 });
 
 server.post("/user", (req, res) => {
